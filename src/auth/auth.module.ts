@@ -7,6 +7,7 @@ import { JwtStrategy } from './jwt.strategy';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Duacoder } from '../duacoder/entities/duacoder.entity';
 import { DuacoderService } from '../duacoder/duacoder.service';
+import { LoggerModule } from '../config/logger.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { DuacoderService } from '../duacoder/duacoder.service';
       secret: 'SECRET_KEY', // Debe ser seguro y almacenado en variables de entorno
       signOptions: { expiresIn: '24h' },
     }),
+    LoggerModule,
   ],
   providers: [AuthService, JwtStrategy, DuacoderService],
   controllers: [AuthController],

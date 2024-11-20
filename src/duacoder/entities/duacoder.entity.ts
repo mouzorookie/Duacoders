@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity()
 export class Duacoder {
@@ -11,25 +11,25 @@ export class Duacoder {
   @Column()
   nombre: string;
 
-  @Column('text')
+  @Column({ type: 'text', nullable: true })
   biografia: string;
 
-  @Column()
+  @Column({ nullable: true })
   departamento: string;
 
-  @Column()
+  @Column({ nullable: true })
   puesto: string;
 
-  @Column('simple-array')
+  @Column({ type: 'json', nullable: true })
   skills: string[];
 
-  @Column()
+  @Column({ nullable: true })
   foto: string;
 
   @Column()
   gustoTortilla: boolean;
 
-  @Column({ nullable: true })
+  @Column({ type: 'date', nullable: true })
   fechaNacimiento: Date;
 
   @Column()
