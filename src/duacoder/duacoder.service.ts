@@ -24,21 +24,41 @@ export class DuacoderService {
     this.logger.info('Logger initialized successfully');
   }
 
-  async create(createDuacoderDto: CreateDuacoderDto): Promise<Duacoder> {
-    try {
-      const hashedPassword = await bcrypt.hash(createDuacoderDto.password, 10);
-      const duacoder = this.duacoderRepository.create({
-        ...createDuacoderDto,
-        password: hashedPassword,
-      });
-      this.logger.info(
-        `Creando un nuevo duacoder con NIF: ${createDuacoderDto.nif}`,
-      );
-      return await this.duacoderRepository.save(duacoder);
-    } catch (error) {
-      this.logger.error(`Error al crear duacoder: ${error.message}`, { error });
-      throw error;
+  async create(
+    createDuacoderDto: CreateDuacoderDto,
+    file?: Express.Multer.File,
+  ): Promise<Duacoder> {
+    const hashedPassword = await bcrypt.hash(createDuacoderDto.password, 10);
+    const duacoder = this.duacoderRepository.create({
+      ...createDuacoderDto,
+      password: hashedPassword,
+    });
+    if (file) {
+      duacoder.foto = file.filename;
     }
+    this.logger.info(
+      `Creando un nuevo duacoder con NIF: ${createDuacoderDto.nif}`,
+    );
+    return await this.duacoderRepository.save(duacoder);
+  }
+
+  async updateFoto(id: number, file: Express.Multer.File): Promise<Duacoder> {
+    const duacoder = await this.findOne(id);
+
+    if (!file) {
+      throw new BadRequestException('No se ha proporcionado ninguna foto');
+    }
+
+    // Opcional: Eliminar la foto anterior si existe
+    if (duacoder.foto) {
+      //const oldPath = `./uploads/duacoders/${duacoder.foto}`;
+      // Elimina el archivo si existe
+      // Necesitas importar 'fs' y usar 'fs.unlinkSync' o 'fs.unlink' para eliminar el archivo
+    }
+
+    duacoder.foto = file.filename;
+    this.logger.info(`Actualizando foto del duacoder con ID: ${id}`);
+    return await this.duacoderRepository.save(duacoder);
   }
 
   async findAll(filterDto: DuacoderFilterDto): Promise<any> {
@@ -111,23 +131,17 @@ export class DuacoderService {
   }
 
   async findOne(id: number): Promise<Duacoder> {
-    try {
-      if (!id) {
-        throw new BadRequestException('El parámetro ID es obligatorio');
-      }
-      const duacoder = await this.duacoderRepository.findOneBy({ id });
-      if (!duacoder) {
-        throw new NotFoundException(`Duacoder con ID ${id} no encontrado`);
-      }
-      this.logger.info(`Duacoder encontrado con ID: ${id}`);
-      return duacoder;
-    } catch (error) {
-      this.logger.error(
-        `Error al buscar duacoder con ID ${id}: ${error.message}`,
-        { error },
-      );
-      throw error;
+    const duacoder = await this.duacoderRepository.findOneBy({ id });
+    if (!duacoder) {
+      throw new NotFoundException(`Duacoder con ID ${id} no encontrado`);
     }
+
+    if (duacoder.foto) {
+      duacoder.foto = `${process.env.HOST || 'http://localhost:3000'}/uploads/duacoders/${duacoder.foto}`;
+    }
+
+    this.logger.info(`Duacoder encontrado con ID: ${id}`);
+    return duacoder;
   }
 
   async update(

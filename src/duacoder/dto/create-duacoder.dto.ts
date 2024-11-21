@@ -59,14 +59,6 @@ export class CreateDuacoderDto {
   @IsString({ each: true })
   skills?: string[];
 
-  @ApiPropertyOptional({
-    description: 'URL de la foto del duacoder',
-    example: 'http://example.com/foto.jpg',
-  })
-  @IsOptional()
-  @IsString()
-  foto?: string;
-
   @ApiProperty({
     description: 'Indica si le gusta la tortilla con cebolla',
     example: true,
