@@ -57,8 +57,16 @@ Deberíamos tener los siguientes request:
 
 ![image](https://github.com/user-attachments/assets/08e35428-11c9-417d-8854-38f5346620ac)
 
-El **tiempo de expiración de los tokens jwt ** es de 24H asique no debería habar que hacer nada, como mucho añadir el token al header de cada request.
-* postNewDuacoder. Este endpoint permite crear un nuevo usuario a partir de los datos de usuario en formato json. **La imagen no va incluida aquí**
+El tiempo de expiración de los tokens jwt es de 24H asique no debería habar que hacer nada, como mucho añadir el token al header de cada request.
+* postNewDuacoder. Este endpoint permite crear un nuevo usuario a partir de los datos de usuario en formato json. **La imagen no va incluida aquí**.
+Devuelve:
+  * 201 si fue creado correctamente. Incluye un json con los datos del usuario recogidos de la BBDD
+  * 400 si hay algún parámetro incorrecto
+  * 404 si no encuentra el endpoint
+  * 401 si no estás autorizado
+  * 500 si hay un error en el servidor
+
+
 
 
 
