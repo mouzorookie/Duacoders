@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/d523209d-2eea-4960-bcc3-88142b387af6)# Duacoders
+# Duacoders
 Prueba técnica para Duacode
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
