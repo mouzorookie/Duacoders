@@ -109,15 +109,19 @@ Devuelve:
   * 401 si no estás autorizado
   * 500 si hay un error en el servidor
 
-* getExcel. Devuelve un archivo de excel. En el postman es necesario darle a guardar respuesta y nombrarlo como xlsx. 
+* getExcel. Devuelve un archivo de excel. En el postman es necesario darle a guardar respuesta y nombrarlo como xlsx. Se puede descargar el excel desde swagger sin necesidad de guardar la respuesta de la petición en un archivo
   * 200 si recibe el archivo
   * 404 si no encuentra el endpoint(URI mal)
   * 401 si no estás autorizado
   * 500 si hay un error en el servidor
 
 
-
-
+## SWAGGER
+En la dirección http://localhost:3000/api#/Duacoders/DuacoderController_create
+podemos encontrar la documentación de swagger. Debí dejar la documentación para el final ya que me retrasó al añadir demasiadas lineas de código al proyecto y hacer que sea dificil encontrar y modificar el código.
+Aquí podemos ir arriba a la derecha y en authorize poner un token de autenticación JWT de Postman. Al hacer click en Try it out podemos ejecutar peticiones sobre los endpoints. Tambien se puede ver bastante información soobre los mismos, aunque no está perfectamente completa en todos los endpoints. 
+Destacar que se puede descargar el excel desde swagger sin necesidad de guardar la respuesta de la petición en un archivo como en Postman. 
+Actualizar la foto es también sencillo desde aquí.
 
 
 
