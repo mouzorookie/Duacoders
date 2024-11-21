@@ -4,8 +4,8 @@ import { HttpExceptionFilter } from './filter/http-exception.filter';
 import { WinstonModule } from 'nest-winston';
 import { winstonConfig } from './config/winston.config';
 import { ValidationPipe } from '@nestjs/common';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { join } from 'path';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app: NestApplication = await NestFactory.create(AppModule, {
@@ -21,7 +21,17 @@ async function bootstrap() {
     .setTitle('Duacoders API')
     .setDescription('API para gestionar duacoders')
     .setVersion('1.0')
-    .addBearerAuth() // Si usas autenticación JWT
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        name: 'JWT',
+        description: 'Ingrese su token JWT aquí',
+        in: 'header',
+      },
+      'jwt',
+    ) // Si usas autenticación JWT
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

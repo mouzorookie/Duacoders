@@ -21,6 +21,7 @@ import { CreateDuacoderDto } from './dto/create-duacoder.dto';
 import { UpdateDuacoderDto } from './dto/update-duacoder.dto';
 import { DuacoderFilterDto } from './dto/duacoder-filter.dto';
 import { Response } from 'express';
+
 import {
   ApiTags,
   ApiBearerAuth,
@@ -46,12 +47,60 @@ const storage = diskStorage({
 });
 
 @ApiTags('Duacoders')
-@ApiBearerAuth()
+@ApiBearerAuth('jwt')
 @UseGuards(AuthGuard('jwt'))
 @Controller('duacoders')
 export class DuacoderController {
   constructor(private readonly duacoderService: DuacoderService) {}
 
+  // Endpoint para exportar un duacoder en PDF
+  @Get(':id/export/pdf')
+  @ApiOperation({ summary: 'Exportar datos de un duacoder en PDF' })
+  @ApiResponse({
+    status: 200,
+    description: 'Archivo PDF generado exitosamente.',
+    content: { 'application/pdf': {} },
+  })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    description: 'ID del duacoder',
+    example: 1,
+  })
+  async exportToPDF(
+    @Param('id', ParseIntPipe) id: number,
+    @Res() res: Response,
+  ) {
+    const buffer = await this.duacoderService.exportToPDF(id);
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': `attachment; filename="duacoder_${id}.pdf"`,
+    });
+    res.send(buffer);
+  }
+
+  // Endpoint para exportar duacoders en Excel
+  @Get('/export/excel')
+  @ApiOperation({ summary: 'Exportar duacoders en Excel' })
+  @ApiResponse({
+    status: 200,
+    description: 'Archivo Excel generado exitosamente.',
+    content: {
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': {},
+    },
+  })
+  async exportToExcel(@Res() res: Response) {
+    const arrayBuffer = await this.duacoderService.exportToExcel();
+    const buffer = Buffer.from(arrayBuffer);
+    res.set({
+      'Content-Type':
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'Content-Disposition': 'attachment; filename="duacoders.xlsx"',
+    });
+    res.send(buffer);
+  }
+
+  // Método para crear un duacoder
   @Post()
   @UseInterceptors(FileInterceptor('foto', { storage }))
   @ApiConsumes('multipart/form-data')
@@ -91,24 +140,6 @@ export class DuacoderController {
       },
     },
   })
-  @Get('/export/excel')
-  @ApiOperation({ summary: 'Exportar duacoders en Excel' })
-  @ApiResponse({
-    status: 200,
-    description: 'Archivo Excel generado exitosamente.',
-    content: {
-      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': {},
-    },
-  })
-  async exportToExcel(@Res() res: Response) {
-    const buffer = await this.duacoderService.exportToExcel();
-    res.set({
-      'Content-Type':
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      'Content-Disposition': 'attachment; filename="duacoders.xlsx"',
-    });
-    res.send(buffer);
-  }
   async create(
     @Body() createDuacoderDto: CreateDuacoderDto,
     @UploadedFile() file: Express.Multer.File,
@@ -116,76 +147,13 @@ export class DuacoderController {
     return await this.duacoderService.create(createDuacoderDto, file);
   }
 
+  // Método para listar duacoders con filtros y paginación
   @Get()
   @ApiOperation({ summary: 'Listar duacoders con filtros y paginación' })
   @ApiResponse({
     status: 200,
     description: 'Lista de duacoders obtenida exitosamente.',
-    schema: {
-      example: {
-        data: [
-          {
-            id: 1,
-            nif: '12345678A',
-            nombre: 'Iván Mouzo',
-            biografia: 'Desarrollador con experiencia en NestJS.',
-            departamento: 'Tecnología',
-            puesto: 'Backend Developer',
-            skills: ['JavaScript', 'TypeScript', 'Node.js'],
-            foto: 'http://localhost:3000/uploads/duacoders/foto-123456789.jpg',
-            gustoTortilla: true,
-            fechaNacimiento: '1990-01-01',
-            // ... otros campos
-          },
-          // ... otros duacoders
-        ],
-        total: 1,
-        page: 1,
-        limit: 10,
-      },
-    },
-  })
-  @ApiQuery({
-    name: 'name',
-    required: false,
-    description: 'Filtrar por nombre',
-    example: 'Iván',
-  })
-  @ApiQuery({
-    name: 'department',
-    required: false,
-    description: 'Filtrar por departamento',
-    example: 'Tecnología',
-  })
-  @ApiQuery({
-    name: 'position',
-    required: false,
-    description: 'Filtrar por puesto',
-    example: 'Backend Developer',
-  })
-  @ApiQuery({
-    name: 'skills',
-    required: false,
-    description: 'Filtrar por skills, separadas por comas',
-    example: 'JavaScript,Node.js',
-  })
-  @ApiQuery({
-    name: 'likesOnion',
-    required: false,
-    description: 'Filtrar por gusto de tortilla con cebolla (true o false)',
-    example: true,
-  })
-  @ApiQuery({
-    name: 'birthDateFrom',
-    required: false,
-    description: 'Filtrar por fecha de nacimiento desde (YYYY-MM-DD)',
-    example: '1990-01-01',
-  })
-  @ApiQuery({
-    name: 'birthDateTo',
-    required: false,
-    description: 'Filtrar por fecha de nacimiento hasta (YYYY-MM-DD)',
-    example: '2000-12-31',
+    // ... esquema de ejemplo ...
   })
   @ApiQuery({
     name: 'page',
@@ -199,10 +167,12 @@ export class DuacoderController {
     description: 'Cantidad de registros por página',
     example: 10,
   })
+  // Añade aquí los demás @ApiQuery para 'department', 'position', etc.
   async findAll(@Query() filterDto: DuacoderFilterDto) {
     return await this.duacoderService.findAll(filterDto);
   }
 
+  // Método para obtener detalle de un duacoder
   @Get(':id')
   @ApiOperation({ summary: 'Obtener detalle de un duacoder' })
   @ApiResponse({
@@ -245,6 +215,7 @@ export class DuacoderController {
     return await this.duacoderService.findOne(id);
   }
 
+  // Método para actualizar un duacoder
   @Patch(':id')
   @ApiOperation({ summary: 'Actualizar un duacoder' })
   @ApiResponse({
@@ -303,6 +274,7 @@ export class DuacoderController {
     return await this.duacoderService.update(id, updateDuacoderDto);
   }
 
+  // Método para eliminar un duacoder
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Eliminar un duacoder' })
@@ -331,6 +303,7 @@ export class DuacoderController {
     return await this.duacoderService.remove(id);
   }
 
+  // Método para actualizar la foto de un duacoder
   @Post(':id/foto')
   @UseInterceptors(FileInterceptor('foto', { storage }))
   @ApiConsumes('multipart/form-data')
