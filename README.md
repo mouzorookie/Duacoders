@@ -54,9 +54,11 @@ En los archivos podemos encontrar la colección Duacoders.postman_collection.jso
 Una vez importadas deberían poder funcionar correctamente. 
 
 Deberíamos tener los siguientes request: 
+
 ![image](https://github.com/user-attachments/assets/08e35428-11c9-417d-8854-38f5346620ac)
 
-El tiempo de expiración de los tokens jwt es de 24H asique no debería habar que hacer nada, como mucho añadir el token al header de cada request.
+El **tiempo de expiración de los tokens jwt ** es de 24H asique no debería habar que hacer nada, como mucho añadir el token al header de cada request.
+* postNewDuacoder. Este endpoint permite crear un nuevo usuario a partir de los datos de usuario en formato json. **La imagen no va incluida aquí**
 
 
 
