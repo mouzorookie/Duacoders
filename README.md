@@ -1,4 +1,4 @@
-# Duacoders
+![image](https://github.com/user-attachments/assets/d523209d-2eea-4960-bcc3-88142b387af6)# Duacoders
 Prueba técnica para Duacode
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
@@ -48,3 +48,15 @@ Para comprobar que se ha importado correctamente:
 mysql -u root -p Duacoder
 mysql> SHOW TABLES;
 ```
+
+## probar los endpoints
+En los archivos podemos encontrar la colección Duacoders.postman_collection.json. Una exportación en formato V2 de las Request de postman.
+Una vez importadas deberían poder funcionar correctamente. 
+
+Deberíamos tener los siguientes request: 
+![image](https://github.com/user-attachments/assets/08e35428-11c9-417d-8854-38f5346620ac)
+
+El tiempo de expiración de los tokens jwt es de 24H asique no debería habar que hacer nada, como mucho añadir el token al header de cada request.
+
+
+
