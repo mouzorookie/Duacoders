@@ -62,9 +62,70 @@ El tiempo de expiración de los tokens jwt es de 24H asique no debería habar qu
 Devuelve:
   * 201 si fue creado correctamente. Incluye un json con los datos del usuario recogidos de la BBDD
   * 400 si hay algún parámetro incorrecto
-  * 404 si no encuentra el endpoint
+  * 404 si no encuentra el endpoint(URI mal)
+  * 401 si no estás autorizado
+  * 500 si hay un error en el servidor(no debería ocurrir)
+  * 
+* getDuacoders. Devuelve una lista paginada de duacoders. Este endpoint acepta filtrado, pero eso se muestra en el siguiente endpoint, que es el mismo. Devuelve:
+  * 200 si todo fue correcto junto con los duacoders que hayan aparecido en la búsqueda.
+  * 404 si no encuentra el endpoint(URI mal)
   * 401 si no estás autorizado
   * 500 si hay un error en el servidor
+
+* getDuacodersFiltered. Tiene los parametros limit y page, pero no están funcionando. Lo que si funciona es el filtrado por nombre, departamento, skills, likesOnion, birthDateFrom.
+  * 200 si todo fue correcto junto con los duacoders que hayan aparecido en la búsqueda.
+  * 404 si no encuentra el endpoint(URI mal)
+  * 401 si no estás autorizado
+  * 500 si hay un error en el servidor
+
+* getDuacoders/number. Muestra los detalles de un único duacoder escogido a partir de su id(numeral autoincremental)
+  * 200 si todo fue correcto junto con los duacoders que hayan aparecido en la búsqueda.
+  * 404 si no encuentra el usuario o el endpoint(URI mal)
+  * 401 si no estás autorizado
+  * 500 si hay un error en el servidor
+  
+* patchDuacoders/number. Permite actualizar campos del duacoder especificado por ID en la URI
+  * 200 si todo está bien, junto con los datos del usuario actualizados
+  * 404 si no encuentra el endpoint(URI mal)
+  * 401 si no estás autorizado
+  * 500 si hay un error en el servidor
+ 
+* deleteDuacoders/number. Permite eliminar al duacoder con el id especificado
+  * 202 si borra exitosamente al usuario
+  * 404 si no encuentra el usuario o el endpoint(URI mal)
+  * 401 si no estás autorizado
+  * 500 si hay un error en el servidor
+
+* postUpdateFoto/number/foto. Permite subir un archivo de foto al directorio del servidor(/uploads/duacodes) y guarda el nombre del fichero en un string en el campo foto. Está funcionando correctamente enviando un form-data de tipo multipart/form-data y la foto adjunta en forma de fichero con la clave foto
+  * 201 si sube la foto exitosamente
+  * 400 si no se incluye la foto
+  * 404 si no encuentra el endpoint(URI mal)
+  * 401 si no estás autorizado
+  * 500 si hay un error en el servidor
+ 
+* getDuacodersPDF/number. No está funcionando. Se ha intentado implementar pero no ha dado tiempo. Se recibe algo pero se obtiene error al intentar cargar el archivo pdff en postman. No se puede guardar en forma de archivo.
+  * 200 aunque no parece funcionar
+  * 404 si no encuentra el usuario o el endpoint(URI mal)
+  * 401 si no estás autorizado
+  * 500 si hay un error en el servidor
+
+* getExcel. Devuelve un archivo de excel. En el postman es necesario darle a guardar respuesta y nombrarlo como xlsx. 
+  * 200 si recibe el archivo
+  * 404 si no encuentra el endpoint(URI mal)
+  * 401 si no estás autorizado
+  * 500 si hay un error en el servidor
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
