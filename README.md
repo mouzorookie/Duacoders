@@ -28,7 +28,7 @@ $ npm run start
 $ npm run start:dev
 ```
 
-## Instalar MySQL 
+## Importar volcado de la BBDD en MySQL
 
 He usado mysql en su versión 9. Teneis disponible el archivo duacoders_dump.sql para importar en vuestro mysql.
 Se usa la database con nombre Duacoders
